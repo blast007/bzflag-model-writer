@@ -228,13 +228,24 @@ void glEnd()
     // {0, 1, 2}, {1, 2, 3}, ...
     else if (faceMode == GL_TRIANGLE_STRIP)
     {
+        bool flip = false;
         for (unsigned long i = 0; i < vertices.size() - 2; ++i)
         {
             modelFile << "f";
-            writeFaceVertInfo(vertices.at(i));
-            writeFaceVertInfo(vertices.at(i+1));
-            writeFaceVertInfo(vertices.at(i+2));
+            if (flip)
+            {
+                writeFaceVertInfo(vertices.at(i+2));
+                writeFaceVertInfo(vertices.at(i+1));
+                writeFaceVertInfo(vertices.at(i));
+            }
+            else
+            {
+                writeFaceVertInfo(vertices.at(i));
+                writeFaceVertInfo(vertices.at(i+1));
+                writeFaceVertInfo(vertices.at(i+2));
+            }
             modelFile << std::endl;
+            flip = !flip;
         }
     }
     // {0, 1, 2}, {1, 2, 3}, ...
