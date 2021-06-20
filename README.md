@@ -14,6 +14,8 @@ See the full text of the LGPL 2.1 in LICENSE.md. The MIT license for gl.h is in 
 
 ## Compiling
 
+Note that this uses GLM, so install that first and make sure that cmake can find it.
+
 mkdir build
 cd build
 cmake ..

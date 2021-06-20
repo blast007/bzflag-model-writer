@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(bzflag-model)
-
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+project(bzflag-model-writer)
 
 find_package(glm REQUIRED)
 

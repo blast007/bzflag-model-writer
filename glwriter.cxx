@@ -34,8 +34,8 @@ struct VertInfo
 };
 
 // Default state
-static glm::vec3 defaultNormal(0.0f, 0.0f, 1.0f);
-static glm::vec2 defaultTexCoord(0.0f, 0.0f);
+static const glm::vec3 defaultNormal(0.0f, 0.0f, 1.0f);
+static const glm::vec2 defaultTexCoord(0.0f, 0.0f);
 
 // State
 static bool shadeModelIsSmooth = true;
@@ -46,13 +46,27 @@ static std::vector<VertInfo> vertices;
 static unsigned int groupCount = 0;
 
 // Model state
-static std::map<std::string, MaterialInfo> materials;
 static std::vector<glm::vec3> modelVertices;
 static std::vector<glm::vec3> modelNormals;
 static std::vector<glm::vec2> modelTexCoords;
 
+// Materials
+static std::map<std::string, MaterialInfo> materials;
+
 void glWriterFileOpen(std::string baseFilename)
 {
+    // Reset state
+    shadeModelIsSmooth = true;
+    faceMode = 0;
+    normal = defaultNormal;
+    texCoord = defaultTexCoord;
+    vertices.clear();
+    groupCount = 0;
+    modelVertices.clear();
+    modelNormals.clear();
+    modelTexCoords.clear();
+
+    // Open the files for writing
     modelFile.open(baseFilename + ".obj", std::ios_base::out);
     materialFile.open(baseFilename + ".mtl", std::ios_base::out);
     logFile.open(baseFilename + ".log", std::ios_base::out);
@@ -62,6 +76,7 @@ void glWriterFileOpen(std::string baseFilename)
         exit(-1);
     }
 
+    // Write out which material file to use and start a named object
     modelFile << "mtllib " << baseFilename << ".mtl" << std::endl;
     modelFile << "o " << baseFilename << std::endl;
 }
@@ -84,6 +99,7 @@ void glWriterFileClose()
     for (auto &material : materials)
     {
         materialFile << "newmtl " << material.first << std::endl;
+        // The diffuse color values default to -1.0, so check if at least the first has been set to something.
         if (material.second.diffuse[0] >= 0.0f)
             materialFile << "  Kd " << material.second.diffuse[0] << " " << material.second.diffuse[1] << " " <<
                          material.second.diffuse[2] << std::endl;
@@ -110,7 +126,8 @@ void glWriterSetCurrentMaterial(std::string name)
 }
 
 
-int glWriterGetVerticeIndex(glm::vec3 v)
+// Utility function to find the index of a matching vertex from our list of unique vertices
+int glWriterGetVertexIndex(glm::vec3 v)
 {
     int index = 1;
     for (const auto &mv : modelVertices)
@@ -119,10 +136,11 @@ int glWriterGetVerticeIndex(glm::vec3 v)
             return index;
         index++;
     }
-    std::cerr << "FATAL ERROR: Unable to find vertice: << " << v.x << " " << v.y << " " << v.z << std::endl;
+    std::cerr << "FATAL ERROR: Unable to find vertex: << " << v.x << " " << v.y << " " << v.z << std::endl;
     exit(-1);
 }
 
+// Utility function to find the index of a matching normal from our list of unique normals
 int glWriterGetNormalIndex(glm::vec3 n)
 {
     int index = 1;
@@ -136,6 +154,7 @@ int glWriterGetNormalIndex(glm::vec3 n)
     exit(-1);
 }
 
+// Utility function to find the index of a matching texture coordinate from our list of unique texture coordinates
 int glWriterGetTexCoordIndex(glm::vec2 t)
 {
     int index = 1;
@@ -149,9 +168,10 @@ int glWriterGetTexCoordIndex(glm::vec2 t)
     exit(-1);
 }
 
+// Write out a single vetex for use in a face definition. This takes the form vetex/texcoord/normal, where each is an index. The last two are optional and can be left blank, or if neither are provided just the vetex can be provided without any slashes.
 void writeFaceVertInfo(VertInfo vi)
 {
-    modelFile << " " << glWriterGetVerticeIndex(vi.vertice);
+    modelFile << " " << glWriterGetVertexIndex(vi.vertice);
     if (vi.texCoord != defaultTexCoord || vi.normal != defaultNormal)
     {
         modelFile << "/";
