@@ -25,11 +25,9 @@ make
 
 ## Usage
 
-From the top level source directory, run:
-./build/bzflag-model-writer
+From the top level source directory, run: ```./build/bzflag-model-writer```
 
-The models and materials will be written to the current working directory.
-
+The models and materials will be written to the current working directory. Note that the model uses Z up. If importing, in Wings3D check "Swap Y and Z Axes" and in Blender set Up to Z Up.
 
 ## Files/information from BZFlag
 Several files are from src/geometry/ and src/geometry/models/tank/
