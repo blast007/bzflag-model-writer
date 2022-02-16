@@ -6,7 +6,7 @@ BZFlag currently does not use an external model to load the tank geometry/materi
 
 This uses some types and constants from the Mesa gl.h file under the MIT license.
 
-This uses some code and textures from BZFlag, copyright Tim Riker. It is dual-licensed LGPL 2.1 and Apache 2.0, and I am choose to use it under the LGPL 2.1.
+This uses some code and textures from BZFlag, copyright Tim Riker. It is dual-licensed LGPL 2.1 and Apache 2.0, and I am choosing to use it under the LGPL 2.1.
 
 The original code here is licensed under the LGPL 2.1 as well.
 
